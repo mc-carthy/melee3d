@@ -38,6 +38,8 @@ public class EnemyHealth : MonoBehaviour {
 
 		isAlive = true;
 		currentHealth = startingHealth;
+
+		GameManager.Instance.RegisterEnemy(this);
 	}
 
 	private void Update () {
@@ -74,6 +76,7 @@ public class EnemyHealth : MonoBehaviour {
 		nav.enabled = false;
 		rb.isKinematic = true;
 		StartCoroutine(RemoveEnemy());
+		GameManager.Instance.KilledEnemy(this);
 	}
 
 	private IEnumerator RemoveEnemy () {
