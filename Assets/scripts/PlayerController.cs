@@ -34,6 +34,12 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void FixedUpdate () {
+        if (!GameManager.Instance.IsGameOver) {
+            MouseLook();
+        }
+    }
+
+    private void MouseLook() {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
