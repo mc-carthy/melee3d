@@ -9,13 +9,15 @@ public class PlayerHealth : MonoBehaviour {
 
 	private CharacterController characterController;
 	private Animator anim;
+	private AudioSource source;
 
 	private float timer;
 	private int currentHealth;
 
 	private void Start () {
-		anim = GetComponent<Animator>();
 		characterController = GetComponent<CharacterController>();
+		anim = GetComponent<Animator>();
+		source = GetComponent<AudioSource>();
 		currentHealth = startingHealth;
 	}
 
@@ -40,6 +42,7 @@ public class PlayerHealth : MonoBehaviour {
 		} else {
 			KillPlayer();
 		}
+		source.PlayOneShot(source.clip);
 	}
 
 	private void KillPlayer () {
