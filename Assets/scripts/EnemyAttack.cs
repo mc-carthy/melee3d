@@ -11,12 +11,14 @@ public class EnemyAttack : MonoBehaviour {
 	private Animator anim;
 	private BoxCollider[] weaponColliders;
 	private GameObject player;
+	private EnemyHealth health;
 	private bool isPlayerInRange;
 
 	private void Start () {
+		anim = GetComponent<Animator>();
 		weaponColliders = GetComponentsInChildren<BoxCollider>();
 		player = GameManager.Instance.Player;
-		anim = GetComponent<Animator>();
+		health = GetComponent<EnemyHealth>();
 
 		StartCoroutine(Attack());
 	}
@@ -42,7 +44,7 @@ public class EnemyAttack : MonoBehaviour {
 	}
 
 	private IEnumerator Attack () {
-		if (isPlayerInRange && !GameManager.Instance.IsGameOver) {
+		if (isPlayerInRange && !GameManager.Instance.IsGameOver && health.IsAlive) {
 			anim.Play("attack");
 			yield return new WaitForSeconds(timeBetweenAttacks);
 		}

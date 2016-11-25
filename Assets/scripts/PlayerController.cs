@@ -8,12 +8,14 @@ public class PlayerController : MonoBehaviour {
     private LayerMask layerMask;
     private CharacterController characterController;
     private Animator anim;
+    private BoxCollider[] weaponColliders;
     private Vector3 currentLookTarget = Vector3.zero;
     private float turnSpeed = 10f;
 
     private void Start () {
         characterController = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        weaponColliders = GetComponentsInChildren<BoxCollider>();
     }
 
     private void Update () {
@@ -29,6 +31,18 @@ public class PlayerController : MonoBehaviour {
             MouseLook();
         }
     }
+
+    public void PlayerBeginAttack () {
+		foreach (BoxCollider weapon in weaponColliders) {
+			weapon.enabled = true;
+		}
+	}
+
+	public void PlayerEndAttack () {
+		foreach (BoxCollider weapon in weaponColliders) {
+			weapon.enabled = false;
+		}
+	}
 
     private void Move() {
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));

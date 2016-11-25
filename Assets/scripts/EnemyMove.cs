@@ -7,9 +7,11 @@ public class EnemyMove : MonoBehaviour {
 	private Transform player;
 	private NavMeshAgent nav;
 	private Animator anim;
+	private EnemyHealth health;
 
 	private void Awake () {
 		Assert.IsNotNull(player);
+		health = GetComponent<EnemyHealth>();
 	}
 
 	private void Start () {
@@ -18,11 +20,14 @@ public class EnemyMove : MonoBehaviour {
 	}
 
 	private void Update () {
-		if (!GameManager.Instance.IsGameOver) {
+		if (!GameManager.Instance.IsGameOver && health.IsAlive) {
 			nav.SetDestination(player.position);
+		} else if (!health.IsAlive) {
+			nav.enabled = false;
 		} else {
 			nav.enabled = false;
 			anim.Play("idle");
 		}
 	}
 }
+ 
