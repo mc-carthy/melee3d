@@ -17,6 +17,20 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Update () {
+        if (!GameManager.Instance.IsGameOver) {
+            Move();
+            Attack();
+        }
+
+    }
+
+    private void FixedUpdate () {
+        if (!GameManager.Instance.IsGameOver) {
+            MouseLook();
+        }
+    }
+
+    private void Move() {
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         characterController.SimpleMove(moveDirection.normalized * moveSpeed);
 
@@ -25,17 +39,13 @@ public class PlayerController : MonoBehaviour {
         } else {
             anim.SetBool("isWalking", true);
         }
+    }
 
+    private void Attack() {
         if (Input.GetMouseButtonDown(0)) {
             anim.Play("doubleChop");
         } else if (Input.GetMouseButtonDown(1)) {
             anim.Play("spinAttack");
-        }
-    }
-
-    private void FixedUpdate () {
-        if (!GameManager.Instance.IsGameOver) {
-            MouseLook();
         }
     }
 
