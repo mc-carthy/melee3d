@@ -25,6 +25,12 @@ public class PlayerController : MonoBehaviour {
         } else {
             anim.SetBool("isWalking", true);
         }
+
+        if (Input.GetMouseButtonDown(0)) {
+            anim.Play("doubleChop");
+        } else if (Input.GetMouseButtonDown(1)) {
+            anim.Play("spinAttack");
+        }
     }
 
     private void FixedUpdate () {
