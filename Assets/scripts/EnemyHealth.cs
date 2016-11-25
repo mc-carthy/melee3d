@@ -15,6 +15,7 @@ public class EnemyHealth : MonoBehaviour {
 	private NavMeshAgent nav;
 	private Rigidbody rb;
 	private CapsuleCollider col;
+	private ParticleSystem blood;
 
 	private float timer = 0;
 	private bool dissapearEnemy;
@@ -33,6 +34,7 @@ public class EnemyHealth : MonoBehaviour {
 		nav = GetComponent<NavMeshAgent>();
 		rb = GetComponent<Rigidbody>();
 		col = GetComponent<CapsuleCollider>();
+		blood = GetComponentInChildren<ParticleSystem>();
 
 		isAlive = true;
 		currentHealth = startingHealth;
@@ -63,6 +65,7 @@ public class EnemyHealth : MonoBehaviour {
 			KillEnemy();
 		}
 		anim.Play("hurt");
+		blood.Play();
 	}
 
 	private void KillEnemy () {

@@ -14,6 +14,7 @@ public class PlayerHealth : MonoBehaviour {
 	private CharacterController characterController;
 	private Animator anim;
 	private AudioSource source;
+	private ParticleSystem blood;
 
 	private float timer;
 	private int currentHealth;
@@ -26,6 +27,7 @@ public class PlayerHealth : MonoBehaviour {
 		characterController = GetComponent<CharacterController>();
 		anim = GetComponent<Animator>();
 		source = GetComponent<AudioSource>();
+		blood = GetComponentInChildren<ParticleSystem>();
 		currentHealth = startingHealth;
 	}
 
@@ -52,6 +54,7 @@ public class PlayerHealth : MonoBehaviour {
 			KillPlayer();
 		}
 		source.PlayOneShot(source.clip);
+		blood.Play();
 	}
 
 	private void KillPlayer () {
