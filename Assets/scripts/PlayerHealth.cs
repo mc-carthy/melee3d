@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
@@ -6,6 +8,8 @@ public class PlayerHealth : MonoBehaviour {
 	private int startingHealth = 100;
 	[SerializeField]
 	private float timeSinceLastHit = 2;
+	[SerializeField]
+	private Slider healthSlider;
 
 	private CharacterController characterController;
 	private Animator anim;
@@ -13,6 +17,10 @@ public class PlayerHealth : MonoBehaviour {
 
 	private float timer;
 	private int currentHealth;
+
+	private void Awake () {
+		Assert.IsNotNull(healthSlider);
+	}
 
 	private void Start () {
 		characterController = GetComponent<CharacterController>();
@@ -39,6 +47,7 @@ public class PlayerHealth : MonoBehaviour {
 			GameManager.Instance.PlayerHit(currentHealth);
 			anim.Play("hurt");
 			currentHealth -= 10; // TODO - Remove this hardcoded value
+			healthSlider.value = (float)currentHealth / (float)startingHealth;
 		} else {
 			KillPlayer();
 		}
