@@ -29,6 +29,18 @@ public class EnemyAttack : MonoBehaviour {
 		}
 	}
 
+	public void EnemyBeginAttack () {
+		foreach (BoxCollider weapon in weaponColliders) {
+			weapon.enabled = true;
+		}
+	}
+
+	public void EnemyEndAttack () {
+		foreach (BoxCollider weapon in weaponColliders) {
+			weapon.enabled = false;
+		}
+	}
+
 	private IEnumerator Attack () {
 		if (isPlayerInRange && !GameManager.Instance.IsGameOver) {
 			anim.Play("attack");
