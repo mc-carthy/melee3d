@@ -18,6 +18,11 @@ public class EnemyMove : MonoBehaviour {
 	}
 
 	private void Update () {
-		nav.SetDestination(player.position);
+		if (!GameManager.Instance.IsGameOver) {
+			nav.SetDestination(player.position);
+		} else {
+			nav.enabled = false;
+			anim.Play("idle");
+		}
 	}
 }
