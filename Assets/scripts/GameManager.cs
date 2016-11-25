@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-	public static GameManager instance = null;
+	public static GameManager Instance = null;
 
 	[SerializeField]
 	private GameObject player;
@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void MakeSingleton() {
-		if (instance == null) {
-			instance = this;
+		if (Instance == null) {
+			Instance = this;
 			DontDestroyOnLoad(gameObject);
 		} else {
 			Destroy(gameObject);
