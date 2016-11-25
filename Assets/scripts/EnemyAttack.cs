@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class EnemyAttack : MonoBehaviour {
 
@@ -16,6 +17,8 @@ public class EnemyAttack : MonoBehaviour {
 		weaponColliders = GetComponentsInChildren<BoxCollider>();
 		player = GameManager.Instance.Player;
 		anim = GetComponent<Animator>();
+
+		StartCoroutine(Attack());
 	}
 
 	private void Update () {
@@ -24,5 +27,14 @@ public class EnemyAttack : MonoBehaviour {
 		} else {
 			isPlayerInRange = false;
 		}
+	}
+
+	private IEnumerator Attack () {
+		if (isPlayerInRange && !GameManager.Instance.IsGameOver) {
+			anim.Play("attack");
+			yield return new WaitForSeconds(timeBetweenAttacks);
+		}
+		yield return null;
+		StartCoroutine(Attack());
 	}
 }
