@@ -33,7 +33,11 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject[] spawnPoints;
 	[SerializeField]
+	private GameObject[] powerupSpawnPoints;
+	[SerializeField]
 	private GameObject[] enemyPrefabs;
+	[SerializeField]
+	private GameObject[] powerupPrefabs;
 	[SerializeField]
 	private Text levelText;
 
@@ -41,8 +45,12 @@ public class GameManager : MonoBehaviour {
 	private List<EnemyHealth> enemies = new List<EnemyHealth>();
 	private List<EnemyHealth> killedEnemies = new List<EnemyHealth>();
 	private int currentLevel;
+	private int maxPowerups = 4;
+	private int powerups = 0;
 	private float generatedSpawnTime = 1f;
 	private float currentSpawnTime = 0f;
+	private float powerupGeneratedSpawnTime = 5f;
+	private float powerupCurrentSpawnTime = 0f;
 
 
 	private void Awake () {
@@ -52,10 +60,12 @@ public class GameManager : MonoBehaviour {
 	private void Start () {
 		currentLevel = 1;
 		StartCoroutine(Spawn());
+		StartCoroutine(PowerupSpawn());
 	}
 
 	private void Update () {
 		currentSpawnTime += Time.deltaTime;
+		powerupCurrentSpawnTime += Time.deltaTime;
 	}
 
 	public void PlayerHit (int currentHP) {
@@ -72,6 +82,10 @@ public class GameManager : MonoBehaviour {
 
 	public void KilledEnemy (EnemyHealth enemy) {
 		killedEnemies.Add(enemy);
+	}
+
+	public void RegisterPowerup () {
+		powerups++;
 	}
 
 	private IEnumerator Spawn () {
@@ -91,8 +105,21 @@ public class GameManager : MonoBehaviour {
 				StartCoroutine(Spawn());
 			}
 		}
-		yield return null;
+		yield return new WaitForSeconds(powerupGeneratedSpawnTime);
 		StartCoroutine(Spawn());
+	}
+
+		private IEnumerator PowerupSpawn () {
+		if (powerupCurrentSpawnTime > powerupGeneratedSpawnTime) {
+			powerupCurrentSpawnTime = 0f;
+			if (powerups < maxPowerups) {
+				GameObject newSpawnPoint = spawnPoints[Random.Range(0, powerupSpawnPoints.Length)];
+				GameObject newPowerup = Instantiate(powerupPrefabs[Random.Range(0, powerupPrefabs.Length)]) as GameObject;
+				newPowerup.transform.position = newSpawnPoint.transform.position;
+			}
+		}
+		yield return null;
+		StartCoroutine(PowerupSpawn());
 	}
 
 	private void UpdateLevelText () {

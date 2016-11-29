@@ -9,6 +9,7 @@ public class HealthPowerUp : MonoBehaviour {
 	private void Start () {
 		player = GameManager.Instance.Player;
 		playerHealth = player.GetComponent<PlayerHealth>();
+		GameManager.Instance.RegisterPowerup();
 	}
 
 	private void OnTriggerEnter (Collider other) {
