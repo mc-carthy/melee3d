@@ -15,6 +15,14 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	[SerializeField]
+	private GameObject arrow;
+	public GameObject Arrow {
+		get {
+			return arrow;
+		}
+	}
+
 	private bool isGameOver;
 	public bool IsGameOver {
 		get {
