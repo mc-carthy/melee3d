@@ -12,6 +12,7 @@ public class RangerAttack : MonoBehaviour {
 	private GameObject player;
 	private EnemyHealth health;
 	private bool isPlayerInRange;
+	private float lookRotationSpeed = 10f;
 
 	private void Start () {
 		anim = GetComponent<Animator>();
@@ -24,6 +25,7 @@ public class RangerAttack : MonoBehaviour {
 	private void Update () {
 		if (Vector3.Distance(transform.position, player.transform.position) < range) {
 			isPlayerInRange = true;
+			RotateTowards(player.transform);
 		} else {
 			isPlayerInRange = false;
 		}
@@ -37,5 +39,11 @@ public class RangerAttack : MonoBehaviour {
 		}
 		yield return null;
 		StartCoroutine(Attack());
+	}
+
+	private void RotateTowards (Transform player) {
+		Vector3 direction = (player.position - transform.position).normalized;
+		Quaternion lookRotation = Quaternion.LookRotation(direction);
+		transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
 	}
 }
