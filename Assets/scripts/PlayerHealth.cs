@@ -17,7 +17,20 @@ public class PlayerHealth : MonoBehaviour {
 	private ParticleSystem blood;
 
 	private float timer;
+
 	private int currentHealth;
+	public int CurrentHealth {
+		get {
+			return currentHealth;
+		}
+		set {
+			if (value < 0) {
+				currentHealth = 0;
+			} else {
+				currentHealth = value;
+			}
+		}
+	}
 
 	private void Awake () {
 		Assert.IsNotNull(healthSlider);
@@ -44,12 +57,21 @@ public class PlayerHealth : MonoBehaviour {
 		}
 	}
 
+	public void PowerUpHealth (int value = 30) {
+		if (currentHealth + value > startingHealth) {
+			CurrentHealth = startingHealth;
+		} else {
+			CurrentHealth += value;
+		}
+		UpdateHealthSlider();
+	}
+
 	private void TakeHit () {
 		if (currentHealth > 0) {
 			GameManager.Instance.PlayerHit(currentHealth);
 			anim.Play("hurt");
 			currentHealth -= 10; // TODO - Remove this hardcoded value
-			healthSlider.value = (float)currentHealth / (float)startingHealth;
+			UpdateHealthSlider();
 		} else {
 			KillPlayer();
 		}
@@ -61,6 +83,10 @@ public class PlayerHealth : MonoBehaviour {
 		anim.Play("die");
 		GameManager.Instance.PlayerHit(currentHealth);
 		characterController.enabled = false;
+	}
+
+	private void UpdateHealthSlider () {
+		healthSlider.value = (float)currentHealth / (float)startingHealth;
 	}
 
 }
