@@ -28,7 +28,7 @@ public class RangerAttack : MonoBehaviour {
 	}
 
 	private void Update () {
-		if (Vector3.Distance(transform.position, player.transform.position) < range) {
+		if (Vector3.Distance(transform.position, player.transform.position) < range && health.IsAlive) {
 			isPlayerInRange = true;
 			RotateTowards(player.transform);
 		} else {
