@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,11 +41,14 @@ public class GameManager : MonoBehaviour {
 	private GameObject[] powerupPrefabs;
 	[SerializeField]
 	private Text levelText;
+	[SerializeField]
+	private Text gameOverText;
 
 	private GameObject newEnemy;
 	private List<EnemyHealth> enemies = new List<EnemyHealth>();
 	private List<EnemyHealth> killedEnemies = new List<EnemyHealth>();
 	private int currentLevel;
+	private int finalLevel = 20;
 	private int maxPowerups = 4;
 	private int powerups = 0;
 	private float generatedSpawnTime = 1f;
@@ -61,6 +65,7 @@ public class GameManager : MonoBehaviour {
 		currentLevel = 1;
 		StartCoroutine(Spawn());
 		StartCoroutine(PowerupSpawn());
+		gameOverText.enabled = false;
 	}
 
 	private void Update () {
@@ -73,6 +78,7 @@ public class GameManager : MonoBehaviour {
 			isGameOver = false;
 		} else {
 			isGameOver = true;
+			StartCoroutine(EndGame("Defeat"));
 		}
 	}
 
@@ -96,13 +102,17 @@ public class GameManager : MonoBehaviour {
 				GameObject enemyToSpawn = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
 				GameObject newEnemy = Instantiate(enemyToSpawn) as GameObject;
 				newEnemy.transform.position = newSpawnPoint.transform.position;
-			} else if (killedEnemies.Count >= currentLevel) {
+			} else if (killedEnemies.Count >= currentLevel && currentLevel <= finalLevel) {
 				enemies.Clear();
 				killedEnemies.Clear();
 				currentLevel++;
 				UpdateLevelText();
 				yield return new WaitForSeconds(generatedSpawnTime * 3);
 				StartCoroutine(Spawn());
+			}
+
+			if (killedEnemies.Count >= finalLevel) {
+				StartCoroutine(EndGame("Victory"));
 			}
 		}
 		yield return new WaitForSeconds(powerupGeneratedSpawnTime);
@@ -120,6 +130,13 @@ public class GameManager : MonoBehaviour {
 		}
 		yield return null;
 		StartCoroutine(PowerupSpawn());
+	}
+
+	private IEnumerator EndGame (string outcome) {
+		gameOverText.text = outcome;
+		gameOverText.enabled = true;
+		yield return new WaitForSeconds(3f);
+		SceneManager.LoadScene("menu");
 	}
 
 	private void UpdateLevelText () {
