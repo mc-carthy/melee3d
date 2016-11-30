@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour {
         anim = GetComponent<Animator>();
         weaponColliders = GetComponentsInChildren<BoxCollider>();
         fireTrail = GameObject.FindGameObjectWithTag("Fire") as GameObject;
+        fireTrailParticles = fireTrail.GetComponent<ParticleSystem>();
         fireTrail.SetActive(false);
         moveSpeed = regularMoveSpeed;
     }
@@ -99,8 +100,14 @@ public class PlayerController : MonoBehaviour {
         moveSpeed = fastMoveSpeed;
 
         yield return new WaitForSeconds(speedPowerUpDuration);
-        
-        fireTrail.SetActive(false);
+
+        var em = fireTrailParticles.emission;
+        em.enabled = false;
         moveSpeed = regularMoveSpeed;
+
+        yield return new WaitForSeconds(2.1f); // Figure used as is greater than the max lifetime of the particles
+        em.enabled = true;
+
+        fireTrail.SetActive(false);
     }
 }
