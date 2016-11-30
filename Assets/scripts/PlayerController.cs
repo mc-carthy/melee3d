@@ -1,21 +1,32 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
-    private float moveSpeed = 10f;
+    private float regularMoveSpeed = 10f;
+    [SerializeField]
+    private float fastMoveSpeed = 15f;
+    [SerializeField]
+    private float speedPowerUpDuration = 10f;
     [SerializeField]
     private LayerMask layerMask;
     private CharacterController characterController;
     private Animator anim;
     private BoxCollider[] weaponColliders;
     private Vector3 currentLookTarget = Vector3.zero;
+    private float moveSpeed;
     private float turnSpeed = 10f;
+    private GameObject fireTrail;
+    private ParticleSystem fireTrailParticles;
 
     private void Start () {
         characterController = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         weaponColliders = GetComponentsInChildren<BoxCollider>();
+        fireTrail = GameObject.FindGameObjectWithTag("Fire") as GameObject;
+        fireTrail.SetActive(false);
+        moveSpeed = regularMoveSpeed;
     }
 
     private void Update () {
@@ -43,6 +54,10 @@ public class PlayerController : MonoBehaviour {
 			weapon.enabled = false;
 		}
 	}
+
+    public void SpeedPowerUp () {
+        StartCoroutine(FireTrail());
+    }
 
     private void Move() {
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -77,5 +92,15 @@ public class PlayerController : MonoBehaviour {
             Quaternion rotation = Quaternion.LookRotation(targetPos - transform.position);
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.fixedDeltaTime * turnSpeed);
         }
+    }
+
+    private IEnumerator FireTrail () {
+        fireTrail.SetActive(true);
+        moveSpeed = fastMoveSpeed;
+
+        yield return new WaitForSeconds(speedPowerUpDuration);
+        
+        fireTrail.SetActive(false);
+        moveSpeed = regularMoveSpeed;
     }
 }
